@@ -31,5 +31,5 @@ A solution to keeping track of the storage in your home
 ### Non-Functional Requirements
 
 - PostgreSQL as the DB?
-- Flask, Ariadne as the API
+- ASP.NET webapi and GraphQL.NET
 - Hosted in two containers
