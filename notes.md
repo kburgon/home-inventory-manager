@@ -33,3 +33,18 @@ A solution to keeping track of the storage in your home
 - PostgreSQL as the DB?
 - ASP.NET webapi and GraphQL.NET
 - Hosted in two containers
+
+## Inventory Manager API
+### Functional Requirements
+
+1. Can perform main business logic of actions
+2. Offer the ability to undo actions
+3. Answer the following API requests
+	a. Scan (Insert) new item
+	b. Create new item type
+	c. Decrement quantity of an item
+
+### Non-Functional Requirements
+
+1. Workflow-type pattern
+
