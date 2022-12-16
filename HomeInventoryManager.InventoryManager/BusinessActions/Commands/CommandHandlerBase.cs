@@ -1,10 +1,14 @@
 namespace BusinessActions.Commands;
 
+/// <summary>
+/// The base class containing structural elements for any
+/// command handler type.
+/// </summary>
 public abstract class CommandHandlerBase<T>
 {
 	public async Task ProcessAsync(CommandBase<T> command)
 	{
-		if (command.CommandType == CommandType.Execute)
+		if (command.CommandAction == CommandAction.Execute)
 		{
 			await ExecuteAsync(command);
 		}
