@@ -5,7 +5,7 @@ namespace HomeInventoryManager.InventoryManager.Workflows.Requests;
 
 public class AddInventoryItemWorkflowRequest : IRequest<InventoryItem>
 {
-	public InventoryItem InventoryItem { get; set; } = new();
+	public int InventoryItemId { get; set; }
 
 	public int AmountToAdd { get; set; }
 }
