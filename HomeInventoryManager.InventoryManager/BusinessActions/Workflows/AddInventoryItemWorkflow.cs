@@ -11,19 +11,24 @@ public class AddInventoryItemWorkflow : IRequestHandler<AddInventoryItemWorkflow
 
 	public AddInventoryItemWorkflow(IInventoryItemApiCaller apiCaller)
 	{
+		if (apiCaller == null)
+		{
+			throw new ArgumentNullException($"Cannot accept null parameter {nameof(apiCaller)}.");
+		}
+
 		_apiCaller = apiCaller;
 	}
 
-    public Task<InventoryItem> Handle(AddInventoryItemWorkflowRequest request, CancellationToken cancellationToken)
+    public async Task<InventoryItem> Handle(AddInventoryItemWorkflowRequest request, CancellationToken cancellationToken)
     {
-		InventoryItem? item = _apiCaller?.GetInventoryItem(request.InventoryItemId);
+		InventoryItem? item = await _apiCaller.GetInventoryItemAsync(request.InventoryItemId);
 
 		if (item == null)
 		{
 			throw new ArgumentException($"InventoryItem with ID {request.InventoryItemId} does not exist.");
 		}
 
-		item.CountInStock += request.AmountToAdd;
-        return Task.FromResult(item);
+		item.CountInStock = await _apiCaller.UpdateStockAsync(item.InventoryItemId, request.AmountToAdd);
+        return item;
     }
 }

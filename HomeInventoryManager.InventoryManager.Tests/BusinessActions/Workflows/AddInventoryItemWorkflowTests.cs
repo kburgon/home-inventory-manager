@@ -15,15 +15,21 @@ public class AddInventoryItemWorkflowTests
 		Fixture fixture = new();
 		AddInventoryItemWorkflowRequest request = fixture.Create<AddInventoryItemWorkflowRequest>();
 		InventoryItem item = fixture.Create<InventoryItem>();
-		int initialCount = item.CountInStock;
 		IInventoryItemApiCaller apiCaller = Mock.Of<IInventoryItemApiCaller>();
-		Mock.Get(apiCaller).Setup(m => m.GetInventoryItem(It.IsAny<int>()))
-							.Returns(item);
+		Mock.Get(apiCaller).Setup(m => m.GetInventoryItemAsync(It.IsAny<int>()))
+							.ReturnsAsync(item);
+		Mock.Get(apiCaller)
+			.Setup(m => m.UpdateStockAsync(It.IsAny<int>(), It.IsAny<int>()))
+			.ReturnsAsync(item.CountInStock + request.AmountToAdd);
 
 		AddInventoryItemWorkflow sut = new(apiCaller);
 
 		var response = await sut.Handle(request, new CancellationToken());
 
-		Assert.Equal(initialCount + request.AmountToAdd, response.CountInStock);
+		Mock.Get(apiCaller)
+			.Verify(m => m.UpdateStockAsync(
+					It.Is<int>(i => i.Equals(item.InventoryItemId)),
+					It.Is<int>(i => i.Equals(request.AmountToAdd))
+				), Times.Once);
 	}
 }

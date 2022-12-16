@@ -4,5 +4,7 @@ namespace HomeInventoryManager.InventoryManager.BusinessActions.DataManagement;
 
 public interface IInventoryItemApiCaller
 {
-	InventoryItem GetInventoryItem(int id);
+	Task<InventoryItem> GetInventoryItemAsync(int id);
+
+	Task<int> UpdateStockAsync(int id, int stockCount);
 }
