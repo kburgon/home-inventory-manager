@@ -5,7 +5,7 @@ using MediatR;
 
 namespace HomeInventoryManager.InventoryManager.Workflows;
 
-public class AddInventoryItemWorkflow : IRequestHandler<AddInventoryItemWorkflowRequest, InventoryItem>
+public class AddInventoryItemWorkflow : IRequestHandler<AddInventoryItemStockWorkflowRequest, InventoryItem>
 {
 	private readonly IInventoryItemApiCaller _apiCaller;
 
@@ -19,7 +19,7 @@ public class AddInventoryItemWorkflow : IRequestHandler<AddInventoryItemWorkflow
 		_apiCaller = apiCaller;
 	}
 
-    public async Task<InventoryItem> Handle(AddInventoryItemWorkflowRequest request, CancellationToken cancellationToken)
+    public async Task<InventoryItem> Handle(AddInventoryItemStockWorkflowRequest request, CancellationToken cancellationToken)
     {
 		InventoryItem? item = await _apiCaller.GetInventoryItemAsync(request.InventoryItemId);
 
@@ -28,7 +28,8 @@ public class AddInventoryItemWorkflow : IRequestHandler<AddInventoryItemWorkflow
 			throw new ArgumentException($"InventoryItem with ID {request.InventoryItemId} does not exist.");
 		}
 
-		item.CountInStock = await _apiCaller.UpdateStockAsync(item.InventoryItemId, request.AmountToAdd);
+		int newStockAmount = item.CountInStock + request.AmountToAdd;
+		item.CountInStock = await _apiCaller.UpdateStockAsync(item.InventoryItemId, newStockAmount);
         return item;
     }
 }
