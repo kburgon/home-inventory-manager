@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  postgres-postgresql:
+    image: postgres:15.1
+    volumes:
+      - ./init/:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+      - DB_APPUSERNAME=setupuser
+      - DB_APPUSERPASSWORD=setuppassword
+    ports:
+      - 5432:5432
