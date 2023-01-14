@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeInventoryManager.Invent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeInventoryManager.InventoryManager.Tests", "HomeInventoryManager.InventoryManager.Tests\HomeInventoryManager.InventoryManager.Tests.csproj", "{E28266B5-ADD0-46BB-9331-FEB811A58D80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeInventoryManager.InventoryAccess.Tests", "HomeInventoryManager.InventoryAccess.Tests\HomeInventoryManager.InventoryAccess.Tests.csproj", "{42191A2E-C2DD-4B27-BBC8-9A57962F318F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +24,5 @@ Global
 		{E28266B5-ADD0-46BB-9331-FEB811A58D80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E28266B5-ADD0-46BB-9331-FEB811A58D80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E28266B5-ADD0-46BB-9331-FEB811A58D80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42191A2E-C2DD-4B27-BBC8-9A57962F318F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42191A2E-C2DD-4B27-BBC8-9A57962F318F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42191A2E-C2DD-4B27-BBC8-9A57962F318F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42191A2E-C2DD-4B27-BBC8-9A57962F318F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
