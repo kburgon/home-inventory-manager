@@ -9,9 +9,15 @@ public class InventoryDbContext : DbContext
     {
     }
 
-    public DbSet<Product> Products { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Product>()
+            .HasKey(p => p.ProductId);
+    }
 
-    public DbSet<ProductItem> ProductItems { get; set; }
+    public DbSet<Product>? Products { get; set; }
 
-    public DbSet<InventoryTransaction> Inventorytransactions { get; set; }
+    public DbSet<ProductItem>? ProductItems { get; set; }
+
+    public DbSet<InventoryTransaction>? Inventorytransactions { get; set; }
 }

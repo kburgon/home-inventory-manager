@@ -1,5 +1,5 @@
-using HomeInventoryManager.InventoryManager.Data;
 using HomeInventoryManager.InventoryManager.Models;
+using HomeInventoryManager.InventoryManager.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeInventoryManager.InventoryManager.Controllers;
@@ -8,9 +8,16 @@ namespace HomeInventoryManager.InventoryManager.Controllers;
 [Route("/api/inventory")]
 public class HomeInventoryController : Controller
 {
-    [HttpGet(Name = "products")]
-    public async Task<Product> GetProducts()
+    private readonly IInventoryManagementService _inventoryManager;
+
+    public HomeInventoryController(IInventoryManagementService inventoryManager)
     {
-        return new Product() { ProductName = "test" };
+        _inventoryManager = inventoryManager;
+    }
+
+    [HttpGet(Name = "products")]
+    public IEnumerable<Product> GetProducts()
+    {
+        return _inventoryManager.GetProducts();
     }
 }

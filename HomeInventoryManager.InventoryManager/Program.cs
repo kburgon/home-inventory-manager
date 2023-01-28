@@ -1,5 +1,6 @@
 using System.Reflection;
 using HomeInventoryManager.InventoryManager.Data;
+using HomeInventoryManager.InventoryManager.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,8 @@ builder.Services.AddDbContextPool<InventoryDbContext>(
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
+builder.Services.AddScoped<IInventoryManagementService, InventoryManagementService>();
 
 var app = builder.Build();
 
