@@ -1,9 +1,6 @@
 using HomeInventoryManager.InventoryManager.Data;
 using HomeInventoryManager.InventoryManager.Data.Repositories;
 using HomeInventoryManager.InventoryManager.GraphQL;
-using HomeInventoryManager.InventoryManager.Services;
-using HotChocolate.AspNetCore;
-using HotChocolate.AspNetCore.Playground;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,17 +21,16 @@ services.AddGraphQLServer()
         .AddMutationType<Mutation>()
         .AddSubscriptionType<Subscription>();
 
-services.AddCors(option => 
-{
-    option.AddPolicy("allowedOrigin",
-        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-});
+// services.AddCors(option => 
+// {
+//     option.AddPolicy("allowedOrigin",
+//         builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+// });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
-services.AddScoped<IInventoryManagementService, InventoryManagementService>();
 services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<ProductRepository, ProductRepository>();
 
@@ -46,18 +42,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
-    // app.UsePlayground(new PlaygroundOptions
-    // {
-    //     QueryPath = "/api",
-    //     Path = "/playground"
-    // });
 }
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors("allowedOrigin");
+// app.UseCors("allowedOrigin");
 app.UseWebSockets();
 
 app.MapControllers();
