@@ -8,11 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
-    <PackageReference Include="GraphQL" Version="7.1.1" />
-    <PackageReference Include="GraphQL.NewtonsoftJson" Version="7.1.1" />
-    <PackageReference Include="GraphQL.SystemTextJson" Version="7.1.1" />
-    <PackageReference Include="MediatR" Version="11.1.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="HotChocolate" Version="12.16.0" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="12.16.0" />
+    <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.5.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
