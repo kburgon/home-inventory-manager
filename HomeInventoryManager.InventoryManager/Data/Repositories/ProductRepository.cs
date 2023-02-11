@@ -1,4 +1,5 @@
 using HomeInventoryManager.InventoryManager.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeInventoryManager.InventoryManager.Data.Repositories
 {
@@ -11,10 +12,10 @@ namespace HomeInventoryManager.InventoryManager.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public List<Product> GetProducts()
-        {
-            return _dbContext.Products?.ToList() ?? new List<Product>();
-        }
+        public List<Product> GetProducts() 
+            => _dbContext.Products?
+                         .Include(p => p.ProductItems)
+                         .ToList() ?? new List<Product>();
 
         public async Task<Product> CreateProductAsync(Product product)
         {
@@ -22,5 +23,10 @@ namespace HomeInventoryManager.InventoryManager.Data.Repositories
             await _dbContext.SaveChangesAsync();
             return product;
         }
+
+        public Product GetProductById(int productId) 
+            => _dbContext.Products?
+                         .Include(p => p.ProductItems)
+                         .SingleOrDefault(p => p.ProductId == productId) ?? new Product();
     }
 }

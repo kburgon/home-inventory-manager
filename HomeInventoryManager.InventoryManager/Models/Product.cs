@@ -12,4 +12,6 @@ public class Product
     [Required]
     [Column("productname")]
     public string ProductName { get; set; } = string.Empty;
+
+    public List<ProductItem> ProductItems { get; set; } = new();
 }
