@@ -7,5 +7,14 @@ namespace HomeInventoryManager.InventoryManager.GraphQL
     {
         public List<Product> GetAllProducts([Service] ProductRepository productRepository)
             => productRepository.GetProducts();
+
+        public List<ProductItem> GetAllProductItems([Service] ProductItemRepository productItemRepository)
+            => productItemRepository.GetAll();
+
+        public List<ProductItem> GetProductItemsByProductId([Service] ProductItemRepository productItemRepository, int productId)
+            => productItemRepository.GetByProductId(productId);
+
+        public List<ProductItem> GetProductItemsByBarcodeNumber([Service] ProductItemRepository productItemRepository, string itemBarcodeNumber)
+            => productItemRepository.GetByItemBarcodeNumber(itemBarcodeNumber);
     }
 }

@@ -33,6 +33,8 @@ services.AddSwaggerGen();
 
 services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<ProductRepository, ProductRepository>();
+services.AddScoped<IProductItemRepository, ProductItemRepository>();
+services.AddScoped<ProductItemRepository, ProductItemRepository>();
 
 var app = builder.Build();
 

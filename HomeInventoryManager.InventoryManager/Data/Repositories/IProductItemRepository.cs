@@ -8,5 +8,7 @@ public interface IProductItemRepository
 
     List<ProductItem> GetByProductId(int productId);
 
+    List<ProductItem> GetByItemBarcodeNumber(string itemBarcodeNumber);
+
     Task<ProductItem> CreateAsync(ProductItem item);
 }
