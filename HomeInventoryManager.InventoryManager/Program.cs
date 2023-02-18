@@ -35,6 +35,8 @@ services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<ProductRepository, ProductRepository>();
 services.AddScoped<IProductItemRepository, ProductItemRepository>();
 services.AddScoped<ProductItemRepository, ProductItemRepository>();
+services.AddScoped<IInventoryTransactionRepository, InventoryTransactionRepository>();
+services.AddScoped<InventoryTransactionRepository, InventoryTransactionRepository>();
 
 var app = builder.Build();
 

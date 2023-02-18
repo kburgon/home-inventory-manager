@@ -33,4 +33,9 @@ public class ProductItemRepository : IProductItemRepository
         => _dbContext?.ProductItems?.Where(pi => pi.ItemBarcodeNumber.Equals(itemBarcodeNumber))
                                     .Include(pi => pi.Product)
                                     .ToList() ?? new List<ProductItem>();
+
+    public ProductItem GetByProductItemId(int productItemId)
+        => _dbContext?.ProductItems?.Where(pi => pi.ProductItemId.Equals(productItemId))
+                                    .Include(pi => pi.Product)
+                                    .FirstOrDefault() ?? new ProductItem();
 }

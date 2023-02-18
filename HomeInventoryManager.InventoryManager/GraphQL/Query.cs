@@ -19,5 +19,8 @@ namespace HomeInventoryManager.InventoryManager.GraphQL
 
         public List<ProductItem> GetProductItemsByBarcodeNumber([Service] ProductItemRepository productItemRepository, string itemBarcodeNumber)
             => productItemRepository.GetByItemBarcodeNumber(itemBarcodeNumber);
+
+        public List<InventoryTransaction> GetAllInventoryTransactions([Service] InventoryTransactionRepository transactionRepository)
+            => transactionRepository.GetAll();
     }
 }
