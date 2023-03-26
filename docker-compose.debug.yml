@@ -4,13 +4,19 @@ version: '3.4'
 
 services:
   homeinventorymanagerinventorymanager:
-    image: homeinventorymanagerinventorymanager
+    image: homeinventorymanager_inventorymanager
     build:
       context: .
       dockerfile: HomeInventoryManager.InventoryManager/Dockerfile
     ports:
       - 5115:5115
+      - 8085:8085
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:5115;http://+:8085
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${HIM_CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=${HIM_CERT_PATH}
+      - CUSTOMCONNSTR_DefaultConnection=${CUSTOMCONNSTR_DefaultConnection}
     volumes:
       - ~/.vsdbg:/remote_debugger:rw
+      - ~/.aspnet/https:/https:ro

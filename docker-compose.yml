@@ -3,10 +3,33 @@
 version: '3.4'
 
 services:
-  homeinventorymanagerinventorymanager:
-    image: homeinventorymanagerinventorymanager
+  inventorymanager:
+    image: inventorymanager
     build:
       context: .
       dockerfile: HomeInventoryManager.InventoryManager/Dockerfile
     ports:
-      - 5115:5115
+      - 44350:44350
+      - 8085:8085
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:44350;http://+:8085
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${HIM_CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=${HIM_CERT_PATH}
+      - CUSTOMCONNSTR_DefaultConnection=${CUSTOMCONNSTR_DefaultConnection}
+    volumes:
+      - ${HOME}/.aspnet/https:/https:ro
+    depends_on:
+      - inventorydatabase
+    links:
+      - inventorydatabase
+
+  inventorydatabase:
+    image: inventorydb:latest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_APPUSERNAME=${DB_APPUSERNAME}
+      - DB_APPUSERPASSWORD=${DB_APPUSERPASSWORD}
+    ports:
+      - 5432:5432
