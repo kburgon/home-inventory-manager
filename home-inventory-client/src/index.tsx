@@ -21,10 +21,6 @@ const router = createBrowserRouter([
 				element: <AddUseItems />
 			}
 		]
-	},
-	{
-		path: "/adduseitems",
-		element: <AddUseItems />
 	}
 ]);
 
