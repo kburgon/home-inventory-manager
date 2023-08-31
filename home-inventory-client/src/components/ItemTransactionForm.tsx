@@ -1,44 +1,32 @@
-import React from 'react';
+import { useState } from 'react';
 
-class ItemTransactionForm extends React.Component {
-	constructor(props:any) {
-		super(props);
-		this.state = {
-			itemNumber: '',
-			amount: 0.0
-		};
+function ItemTransactionForm() {
+	const [inputs, setInputs] = useState({});
 
-		this.handleInputChange = this.handleInputChange.bind(this);
-	}
+	const handleChange = (event) => {
+		const name = event.target.name;
+		const value = event.target.value;
+		setInputs(values => ({...values, [name]:value}));
+	};
 
-	handleInputChange(event:any) {
-		const target = event.target;
-		const value = target.type === 'checkbox' ? target.checked : target.value;
-		const name = target.name;
+	// Continue following here: https://www.w3schools.com/react/react_forms.asp
 
-		this.setState({
-			[name]: value
-		});
-	}
-
-	render() {
-		return (
-			<form>
-				<div className="inputRow">
-					<label className="inputLabel" >Item Number: </label>
-					<input type="text" id="itemBarcodeInput" />
-				</div>
-				<div className="inputRow">
-					<label className="inputLabel">Amount: </label>
-					<input type="text" id="transactionAmountInput" />
-				</div>
-				<div className="inputRow">
-					<input type="button" value="Add Items" />
-					<input type="button" value="Remove Items" />
-				</div>
-			</form>
-		);
-	}
+	return (
+		<form>
+			<div className="inputRow">
+				<label className="inputLabel" >Item Number: </label>
+				<input type="text" id="itemBarcodeInput" />
+			</div>
+			<div className="inputRow">
+				<label className="inputLabel">Amount: </label>
+				<input type="text" id="transactionAmountInput" />
+			</div>
+			<div className="inputRow">
+				<input type="button" value="Add Items" />
+				<input type="button" value="Remove Items" />
+			</div>
+		</form>
+	);
 }
 
 export default ItemTransactionForm;
