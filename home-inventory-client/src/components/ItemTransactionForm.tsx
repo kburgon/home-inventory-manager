@@ -1,7 +1,12 @@
 import { useState } from 'react';
 
 function ItemTransactionForm() {
-	const [inputs, setInputs] = useState({itemBarcode : "", transactionAmount : 0.0});
+	const [inputs, setInputs] = useState(
+		{
+			itemBarcode : "", 
+			transactionAmount : 0.0,
+			submitMsg: ""
+		});
 
 	const handleChange = (event:any) => {
 		const name = event.target.name;
@@ -12,15 +17,9 @@ function ItemTransactionForm() {
 	const handleSubmit = (event:any) => {
 		event.preventDefault();
 		const submitter = event.nativeEvent.submitter.name;
-		if (submitter === "addItems") {
-			console.log("adding items");
-		}
-		else {
-			console.log("removing items");
-		}
+		// TODO: Send graphql call to save items
+		setInputs(values => ({...values, submitMsg:submitter}));
 	}
-
-	// Continue following here: https://www.w3schools.com/react/react_forms.asp
 
 	return (
 		<form onSubmit={handleSubmit}>
@@ -47,6 +46,9 @@ function ItemTransactionForm() {
 			<div className="inputRow">
 				<input type="submit" name="addItems" value="Add Items" />
 				<input type="submit" name="removeItems" value="Remove Items" />
+			</div>
+			<div className="msgRow">
+				<p>{inputs.submitMsg}</p>
 			</div>
 		</form>
 	);
