@@ -6,6 +6,7 @@ import App from './App';
 import InventoryHome from "./routes/InventoryHome";
 import AddUseItems from "./routes/AddUseItems";
 import reportWebVitals from './reportWebVitals';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 const router = createBrowserRouter([
 	{
@@ -24,12 +25,19 @@ const router = createBrowserRouter([
 	}
 ]);
 
+const gqlClient = new ApolloClient({
+	uri: 'https://192.168.1.12:44350/graphql',
+	cache: new InMemoryCache()
+});
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-	  <RouterProvider router={router} />
+	  <ApolloProvider client={gqlClient}>
+		  <RouterProvider router={router} />
+	  </ApolloProvider>
   </React.StrictMode>
 );
 
