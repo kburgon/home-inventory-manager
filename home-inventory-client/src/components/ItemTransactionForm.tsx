@@ -12,7 +12,7 @@ function GetProducts() {
 	const { loading, error, data } = useQuery(PRODUCTS_QUERY);
 
 	if (loading) return "loading";
-	if (error} return error.message;
+	if (error) return error.message;
 
 	return data.locations;
 }
@@ -39,36 +39,38 @@ function ItemTransactionForm() {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<div className="inputRow">
-				<label className="inputLabel" >Item Number: </label>
-				<input 
-					type="text" 
-					id="itemBarcodeInput" 
-					name="itemBarcode"
-					value={inputs.itemBarcode || ""}
-					onChange={handleChange}
-				/>
-			</div>
-			<div className="inputRow">
-				<label className="inputLabel">Amount: </label>
-				<input 
-					type="text" 
-					id="transactionAmountInput" 
-					name="transactionAmount"
-					value={inputs.transactionAmount || 0}
-					onChange={handleChange}
-				/>
-			</div>
-			<div className="inputRow">
-				<input type="submit" name="addItems" value="Add Items" />
-				<input type="submit" name="removeItems" value="Remove Items" />
-			</div>
-			<div className="msgRow">
-				<p>{inputs.submitMsg}</p>
-			</div>
-		</form>
-		<p>{GetProducts()}</p>
+		<>
+			<form onSubmit={handleSubmit}>
+				<div className="inputRow">
+					<label className="inputLabel" >Item Number: </label>
+					<input 
+						type="text" 
+						id="itemBarcodeInput" 
+						name="itemBarcode"
+						value={inputs.itemBarcode || ""}
+						onChange={handleChange}
+					/>
+				</div>
+				<div className="inputRow">
+					<label className="inputLabel">Amount: </label>
+					<input 
+						type="text" 
+						id="transactionAmountInput" 
+						name="transactionAmount"
+						value={inputs.transactionAmount || 0}
+						onChange={handleChange}
+					/>
+				</div>
+				<div className="inputRow">
+					<input type="submit" name="addItems" value="Add Items" />
+					<input type="submit" name="removeItems" value="Remove Items" />
+				</div>
+				<div className="msgRow">
+					<p>{inputs.submitMsg}</p>
+				</div>
+			</form>
+			<p>{GetProducts()}</p>
+		</>
 	);
 }
 

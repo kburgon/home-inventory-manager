@@ -21,11 +21,11 @@ services.AddGraphQLServer()
         .AddMutationType<Mutation>()
         .AddSubscriptionType<Subscription>();
 
-// services.AddCors(option => 
-// {
-//     option.AddPolicy("allowedOrigin",
-//         builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-// });
+services.AddCors(option => 
+{
+    option.AddPolicy("allowedorigin",
+        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
@@ -52,7 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-// app.UseCors("allowedOrigin");
+app.UseCors("allowedOrigin");
 app.UseWebSockets();
 
 app.MapControllers();

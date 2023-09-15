@@ -6,7 +6,7 @@ import App from './App';
 import InventoryHome from "./routes/InventoryHome";
 import AddUseItems from "./routes/AddUseItems";
 import reportWebVitals from './reportWebVitals';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 const router = createBrowserRouter([
 	{
@@ -26,8 +26,13 @@ const router = createBrowserRouter([
 ]);
 
 const gqlClient = new ApolloClient({
-	uri: 'https://192.168.1.12:44350/graphql',
-	cache: new InMemoryCache()
+	cache: new InMemoryCache(),
+	link: new HttpLink({
+		fetchOptions:{
+			mode: 'no-cors'
+		},
+		uri: 'https://192.168.1.12:44350/graphql'
+	}),
 });
 
 const root = ReactDOM.createRoot(
