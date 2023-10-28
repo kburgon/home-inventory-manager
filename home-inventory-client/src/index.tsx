@@ -28,10 +28,7 @@ const router = createBrowserRouter([
 const gqlClient = new ApolloClient({
 	cache: new InMemoryCache(),
 	link: new HttpLink({
-		fetchOptions:{
-			mode: 'no-cors'
-		},
-		uri: 'https://192.168.1.12:44350/graphql'
+		uri: 'https://inventorymanager:5115/graphql',
 	}),
 });
 
