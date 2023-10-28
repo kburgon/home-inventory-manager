@@ -3,8 +3,8 @@
 version: '3.4'
 
 services:
-  homeinventorymanagerinventorymanager:
-    image: homeinventorymanager_inventorymanager
+  inventorymanager:
+    image: inventorymanager
     build:
       context: .
       dockerfile: HomeInventoryManager.InventoryManager/Dockerfile
@@ -20,3 +20,32 @@ services:
     volumes:
       - ~/.vsdbg:/remote_debugger:rw
       - ~/.aspnet/https:/https:ro
+    depends_on:
+      - inventorydatabase
+    links:
+      - inventorydatabase
+
+  inventorydatabase:
+    image: inventorydb
+    build: 
+      context: Database/
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_APPUSERNAME=${DB_APPUSERNAME}
+      - DB_APPUSERPASSWORD=${DB_APPUSERPASSWORD}
+    ports:
+      - 5432:5432
+
+  inventoryclient:
+    image: inventoryclient
+    build:
+      context: .
+      dockerfile: home-inventory-client/Dockerfile
+    ports:
+      - 8000:3000
+    depends_on:
+      - inventorymanager
+    links:
+      - inventorymanager

@@ -5,6 +5,6 @@
 # - DB_APPUSERPASSWORD
 
 FROM postgres:15.1
-COPY ./init/ /docker-entrypoint-initdb.d/
+COPY init/ /docker-entrypoint-initdb.d/
 RUN ls /docker-entrypoint-initdb.d/
 EXPOSE 5432
