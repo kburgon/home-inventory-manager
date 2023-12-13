@@ -4,7 +4,7 @@ import './Navbar.css';
 
 const Navbar = () =>{
 	return (
-		<ul>
+		<ul className="navbar">
 			<li>
 				<Link to="/">Inventory Home</Link>
 			</li>

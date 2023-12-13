@@ -1,0 +1,17 @@
+form {
+	position: absolute;
+	bottom: 70px;
+	text-align: center;
+	width: 100%;
+}
+
+.inputRow {
+	margin-bottom: 5px;
+}
+
+.inputColumn1 {
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+	width: 100px;
+}

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
+import "./ItemTransactionForm.css";
 
 const PRODUCTS_QUERY = gql`
 	query {
@@ -42,8 +43,9 @@ function ItemTransactionForm() {
 		<>
 			<form onSubmit={handleSubmit}>
 				<div className="inputRow">
-					<label className="inputLabel" >Item Number: </label>
+					<label className="inputColumn1" >Item Number: </label>
 					<input 
+						className="inputColumn2"
 						type="text" 
 						id="itemBarcodeInput" 
 						name="itemBarcode"
@@ -52,8 +54,9 @@ function ItemTransactionForm() {
 					/>
 				</div>
 				<div className="inputRow">
-					<label className="inputLabel">Amount: </label>
+					<label className="inputColumn1">Amount: </label>
 					<input 
+						className="inputColumn2"
 						type="text" 
 						id="transactionAmountInput" 
 						name="transactionAmount"
