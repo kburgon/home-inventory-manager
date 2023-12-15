@@ -5,8 +5,12 @@ form {
 	width: 100%;
 }
 
+input {
+	height: 50px;
+}
+
 .inputRow {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 
 .inputColumn1 {
@@ -14,4 +18,10 @@ form {
 	text-align: right;
 	margin-right: 10px;
 	width: 100px;
+}
+
+.transSubmit {
+    width: 125px;
+    height: 50px;
+    margin: 10px;
 }

@@ -57,16 +57,18 @@ function ItemTransactionForm() {
 					<label className="inputColumn1">Amount: </label>
 					<input 
 						className="inputColumn2"
-						type="text" 
+						type="number" 
 						id="transactionAmountInput" 
 						name="transactionAmount"
 						value={inputs.transactionAmount || 0}
 						onChange={handleChange}
+						min="1"
+						step="1"
 					/>
 				</div>
 				<div className="inputRow">
-					<input type="submit" name="addItems" value="Add Items" />
-					<input type="submit" name="removeItems" value="Remove Items" />
+					<input className="transSubmit" type="submit" name="addItems" value="Add Items" />
+					<input className="transSubmit" type="submit" name="removeItems" value="Remove Items" />
 				</div>
 				<div className="msgRow">
 					<p>{inputs.submitMsg}</p>
