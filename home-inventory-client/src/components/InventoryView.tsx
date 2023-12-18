@@ -1,7 +1,16 @@
+import InventoryItem from "./InventoryItem";
 function InventoryView() {
 	return (
 		<>
-			<h2>Inventory</h2>
+			<div className="itemSearch">
+				<input name="itemSearchField" type="search" />
+			</div>
+			<div className="inventoryItems">
+				<InventoryItem />
+				<InventoryItem />
+				<InventoryItem />
+				<InventoryItem />
+			</div>
 		</>
 	);
 }
