@@ -3,7 +3,6 @@
 	float: left;
 	height: 70px;
 	width: 100%;
-	border: 1px;
 }
 
 .itemTitle {
@@ -21,4 +20,6 @@
 .itemStock {
 	height:  70px;
 	width: 15%;
+	float: left;
+	display: table;
 }
