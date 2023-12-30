@@ -1,3 +1,24 @@
 .inventoryItem {
-	width: 100%
+	display: table;
+	float: left;
+	height: 70px;
+	width: 100%;
+	border: 1px;
+}
+
+.itemTitle {
+	width: 85%;
+	float: left;
+	display: table;
+}
+
+.stockAmount {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.itemStock {
+	height:  70px;
+	width: 15%;
 }
