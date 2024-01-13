@@ -1,8 +1,14 @@
 import "./InventoryItem.css";
 
-function InventoryItem({itemName, itemStockAmount}: {itemName: string, itemStockAmount: number}) {
+interface InventoryItemDetails {
+	itemName: string;
+	itemStockAmount: number;
+	goodStockCount: number;
+}
+
+function InventoryItem({itemName, itemStockAmount, goodStockCount}: InventoryItemDetails) {
 	return (
-		<div className="inventoryItem">
+		<div className={itemStockAmount < goodStockCount ? "inventoryItem lowStockCount" : "inventoryItem"}>
 		<span className="productName">{itemName}</span>
 		<span className="stockAmount">{itemStockAmount}</span>
 		</div>

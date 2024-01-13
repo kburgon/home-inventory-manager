@@ -5,6 +5,10 @@
 	width: 100%;
 }
 
+.lowStockCount {
+	background-color: red;
+}
+
 .productName {
 	width: 85%;
 	height: 70px;
