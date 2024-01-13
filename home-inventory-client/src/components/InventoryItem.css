@@ -1,25 +1,21 @@
 .inventoryItem {
 	display: table;
-	float: left;
+	float: center;
 	height: 70px;
 	width: 100%;
 }
 
-.itemTitle {
+.productName {
 	width: 85%;
-	float: left;
-	display: table;
+	height: 70px;
+	display: table-cell;
+	vertical-align: middle;
+	text-align: left;
+	padding-left: 20px;
 }
 
 .stockAmount {
 	display: table-cell;
 	text-align: center;
 	vertical-align: middle;
-}
-
-.itemStock {
-	height:  70px;
-	width: 15%;
-	float: left;
-	display: table;
 }
