@@ -1,7 +1,7 @@
-.itemSearch {
-	margin-bottom: 10px;
-}
-
 input[type="search"] {
 	border-radius: 10px;
+}
+
+.itemSearch {
+	margin-bottom: 10px;
 }

@@ -1,3 +1,4 @@
+import "./InventoryView.css"
 import InventoryItem from "./InventoryItem";
 import { useState } from 'react';
 
