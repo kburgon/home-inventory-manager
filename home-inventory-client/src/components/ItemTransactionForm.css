@@ -9,6 +9,11 @@ input {
 	height: 50px;
 }
 
+.scanner {
+	margin: 20px;
+	width: 350px;
+}
+
 .inputRow {
 	margin-bottom: 10px;
 }
@@ -17,7 +22,7 @@ input {
 	display: inline-block;
 	text-align: right;
 	margin-right: 10px;
-	width: 100px;
+	width: 90px;
 }
 
 .transSubmit {

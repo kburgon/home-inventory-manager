@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
+import { BarcodeScanner } from './BarcodeScanner';
+import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
 
 const PRODUCTS_QUERY = gql`
@@ -23,7 +25,8 @@ function ItemTransactionForm() {
 		{
 			itemBarcode : "", 
 			transactionAmount : 0.0,
-			submitMsg: ""
+			submitMsg: "",
+			scanResult: ""
 		});
 
 	const handleChange = (event:any) => {
@@ -38,10 +41,22 @@ function ItemTransactionForm() {
 		// TODO: Send graphql call to save items
 		setInputs(values => ({...values, submitMsg:submitter}));
 	}
+	
+	const handleScanBarcode = (result: Result) => {
+		setInputs(values => ({...values, itemBarcode:result.toString()}));
+	}
+
+	const handleScanBarcodeError = (error: Error) => {
+		setInputs(values => ({...values, setScanResult:error.message}));
+	}
 
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
+				<div className="scanner">
+					<BarcodeScanner onResult={handleScanBarcode} onError={handleScanBarcodeError} />
+					<span>{inputs.scanResult}</span>
+				</div>
 				<div className="inputRow">
 					<label className="inputColumn1" >Item Number: </label>
 					<input 
