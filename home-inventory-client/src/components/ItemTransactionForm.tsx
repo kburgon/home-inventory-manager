@@ -26,7 +26,8 @@ function ItemTransactionForm() {
 			itemBarcode : "", 
 			transactionAmount : 0.0,
 			submitMsg: "",
-			scanResult: ""
+			scanResult: "",
+			productName: ""
 		});
 
 	const handleChange = (event:any) => {
@@ -65,6 +66,17 @@ function ItemTransactionForm() {
 						id="itemBarcodeInput" 
 						name="itemBarcode"
 						value={inputs.itemBarcode || ""}
+						onChange={handleChange}
+					/>
+				</div>
+				<div className="inputRow">
+					<label className="inputColumn1" >Product: </label>
+					<input 
+						className="inputColumn2"
+						type="text" 
+						id="productInput" 
+						name="product"
+						value={inputs.productName || ""}
 						onChange={handleChange}
 					/>
 				</div>
