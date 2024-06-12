@@ -1,24 +1,7 @@
 import { useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
 import { BarcodeScanner } from './BarcodeScanner';
 import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
-
-const PRODUCTS_QUERY = gql`
-	query {
-	  allProducts {
-		productName
-	  }
-	}`;
-
-function GetProducts() {
-	const { loading, error, data } = useQuery(PRODUCTS_QUERY);
-
-	if (loading) return "loading";
-	if (error) return error.message;
-
-	return data.locations;
-}
 
 function ItemTransactionForm() {
 	const [inputs, setInputs] = useState(
@@ -101,7 +84,6 @@ function ItemTransactionForm() {
 					<p>{inputs.submitMsg}</p>
 				</div>
 			</form>
-			<p>{GetProducts()}</p>
 		</>
 	);
 }
