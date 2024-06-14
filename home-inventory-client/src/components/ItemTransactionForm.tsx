@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { BarcodeScanner } from './BarcodeScanner';
-import { Result } from '@zxing/library';
+// import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
 
 function ItemTransactionForm() {
@@ -23,22 +22,22 @@ function ItemTransactionForm() {
 		event.preventDefault();
 		const submitter = event.nativeEvent.submitter.name;
 		// TODO: Send graphql call to save items
-		setInputs(values => ({...values, submitMsg:submitter}));
+		setInputs(values => ({...values, submitMsg:submitter + ' ' + inputs.transactionAmount + ' for ' + inputs.itemBarcode}));
 	}
 	
-	const handleScanBarcode = (result: Result) => {
-		setInputs(values => ({...values, itemBarcode:result.toString()}));
-	}
-
-	const handleScanBarcodeError = (error: Error) => {
-		setInputs(values => ({...values, setScanResult:error.message}));
-	}
+	// const handleScanBarcode = (result: Result) => {
+	// 	setInputs(values => ({...values, itemBarcode:result.toString()}));
+	// }
+	//
+	// const handleScanBarcodeError = (error: Error) => {
+	// 	setInputs(values => ({...values, setScanResult:error.message}));
+	// }
 
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
 				<div className="scanner">
-					<BarcodeScanner onResult={handleScanBarcode} onError={handleScanBarcodeError} />
+				{/* <BarcodeScanner onResult={handleScanBarcode} onError={handleScanBarcodeError} /> */}
 					<span>{inputs.scanResult}</span>
 				</div>
 				<div className="inputRow">
