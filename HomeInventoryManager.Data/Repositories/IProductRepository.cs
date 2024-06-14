@@ -1,8 +1,7 @@
 ﻿using HomeInventoryManager.Data.Entities;
 
-namespace HomeInventoryManager.Data;
+namespace HomeInventoryManager.Data.Repositories;
 
-public interface IProductRepository
+public interface IProductRepository : IGetsAllRepository<Product>
 {
-	List<Product> GetAll();
 }
