@@ -8,11 +8,11 @@ public class ProductRepository : IProductRepository
     {
 		return Task.FromResult(new List<Product>
 		{
-			new() { ProductId = 0, ProductName = "Test", Count = 7 },
-			new() { ProductId = 0, ProductName = "Test", Count = 7 },
-			new() { ProductId = 0, ProductName = "Test", Count = 7 },
-			new() { ProductId = 0, ProductName = "Test", Count = 7 },
-			new() { ProductId = 0, ProductName = "Test", Count = 7 }
+			new() { ProductId = 0, ProductName = "Test", Count = 7, CountWarningThreshold = 4},
+			new() { ProductId = 0, ProductName = "Test", Count = 7, CountWarningThreshold = 4},
+			new() { ProductId = 0, ProductName = "Test", Count = 7, CountWarningThreshold = 4},
+			new() { ProductId = 0, ProductName = "Test", Count = 7, CountWarningThreshold = 4},
+			new() { ProductId = 0, ProductName = "Test", Count = 7, CountWarningThreshold = 4}
 		});
     }
 }

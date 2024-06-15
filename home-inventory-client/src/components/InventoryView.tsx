@@ -4,13 +4,13 @@ import { useState } from 'react';
 
 function InventoryView() {
 	const [items, setItems] = useState([
-		{ itemName: "Bread", stock: 1, warningThreshold: 3},
-		{ itemName: "Oatmeal", stock: 2, warningThreshold: 1},
-		{ itemName: "Cereal", stock: 3, warningThreshold: 2},
-		{ itemName: "Milk", stock: 4, warningThreshold: 0},
-		{ itemName: "Eggs", stock: 1, warningThreshold: 4 }
+		{ ProductName: "Bread", Count: 1, CountWarningThreshold: 3},
+		{ ProductName: "Oatmeal", Count: 2, CountWarningThreshold: 1},
+		{ ProductName: "Cereal", Count: 3, CountWarningThreshold: 2},
+		{ ProductName: "Milk", Count: 4, CountWarningThreshold: 0},
+		{ ProductName: "Eggs", Count: 1, CountWarningThreshold: 4 }
 	]);
-	items.sort((a, b) => a.stock > b.stock ? 1 : -1);
+	items.sort((a, b) => a.Count > b.Count ? 1 : -1);
 
 	const [searchText, setSearchText] = useState("");
 
@@ -21,11 +21,11 @@ function InventoryView() {
 			</div>
 			<div className="inventoryItems">
 				{ items 
-					&& items.filter(item => item.itemName.toLowerCase().indexOf(searchText.toLowerCase()) > -1).map(item => (
+					&& items.filter(item => item.ProductName.toLowerCase().indexOf(searchText.toLowerCase()) > -1).map(item => (
 						<InventoryItem 
-							itemName={item.itemName} 
-							itemStockAmount={item.stock}
-							goodStockCount={item.warningThreshold} />
+							itemName={item.ProductName} 
+							itemStockAmount={item.Count}
+							goodStockCount={item.CountWarningThreshold} />
 					))}
 			</div>
 		</>

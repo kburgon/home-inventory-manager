@@ -16,4 +16,7 @@ public class Product
 
 	[Column("count")]
 	public int Count { get; set; } = 0;
+
+	[Column("countwarningtheshold")]
+	public int CountWarningThreshold { get; set; } = 0;
 }
