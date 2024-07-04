@@ -1,16 +1,27 @@
 import "./InventoryView.css"
 import InventoryItem from "./InventoryItem";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function InventoryView() {
 	const [items, setItems] = useState([
-		{ itemName: "Bread", stock: 1, warningThreshold: 3},
-		{ itemName: "Oatmeal", stock: 2, warningThreshold: 1},
-		{ itemName: "Cereal", stock: 3, warningThreshold: 2},
-		{ itemName: "Milk", stock: 4, warningThreshold: 0},
-		{ itemName: "Eggs", stock: 1, warningThreshold: 4 }
+		{ productName: "Bread", count: 1, warningThreshold: 3},
+		{ productName: "Oatmeal", count: 2, warningThreshold: 1},
+		{ productName: "Cereal", count: 3, warningThreshold: 2},
+		{ productName: "Milk", count: 4, warningThreshold: 0},
+		{ productName: "Eggs", count: 1, warningThreshold: 4 }
 	]);
-	items.sort((a, b) => a.stock > b.stock ? 1 : -1);
+
+	useEffect(() => {
+		fetch('http://localhost:5223/api/products/all')
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				setItems(data);
+			})
+			.catch((err) => { console.log(err.message); });
+	}, []);
+
+	items.sort((a, b) => a.count > b.count ? 1 : -1);
 
 	const [searchText, setSearchText] = useState("");
 
@@ -21,10 +32,10 @@ function InventoryView() {
 			</div>
 			<div className="inventoryItems">
 				{ items 
-					&& items.filter(item => item.itemName.toLowerCase().indexOf(searchText.toLowerCase()) > -1).map(item => (
+					&& items.filter(item => item.productName.toLowerCase().indexOf(searchText.toLowerCase()) > -1).map(item => (
 						<InventoryItem 
-							itemName={item.itemName} 
-							itemStockAmount={item.stock}
+							productName={item.productName} 
+							itemStockAmount={item.count}
 							goodStockCount={item.warningThreshold} />
 					))}
 			</div>
