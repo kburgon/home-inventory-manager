@@ -22,13 +22,6 @@ func main() {
 			{ productName: "Milk", count: 0, warningThreshold: 1 },
 		}
 
-		for i, result := range results {
-			fmt.Printf("Product %d", i)
-			fmt.Printf("\tproductName: %s\n", result.productName)
-			fmt.Printf("\tcount: %d\n", result.count)
-			fmt.Printf("\twarningThreshold: %d\n", result.warningThreshold)
-		}
-
 		if err := ctx.BindJSON(&results); err != nil {
 			fmt.Printf("ERROR: %s\n", err)
 			ctx.AbortWithError(http.StatusBadRequest, err)
