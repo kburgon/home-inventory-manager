@@ -5,8 +5,8 @@ import "./ItemTransactionForm.css";
 function ItemTransactionForm() {
 	const [inputs, setInputs] = useState(
 		{
-			itemBarcode : "", 
-			transactionAmount : 0.0,
+			productId : "", 
+			count : 0,
 			submitMsg: "",
 			scanResult: "",
 			productName: ""
@@ -22,7 +22,7 @@ function ItemTransactionForm() {
 		event.preventDefault();
 		const submitter = event.nativeEvent.submitter.name;
 		// TODO: Send graphql call to save items
-		setInputs(values => ({...values, submitMsg:submitter + ' ' + inputs.transactionAmount + ' for ' + inputs.itemBarcode}));
+		setInputs(values => ({...values, submitMsg:submitter + ' ' + inputs.count + ' for ' + inputs.productId}));
 	}
 	
 	// const handleScanBarcode = (result: Result) => {
@@ -47,7 +47,7 @@ function ItemTransactionForm() {
 						type="text" 
 						id="itemBarcodeInput" 
 						name="itemBarcode"
-						value={inputs.itemBarcode || ""}
+						value={inputs.productId || ""}
 						onChange={handleChange}
 					/>
 				</div>
@@ -69,7 +69,7 @@ function ItemTransactionForm() {
 						type="number" 
 						id="transactionAmountInput" 
 						name="transactionAmount"
-						value={inputs.transactionAmount || 0}
+						value={inputs.count || 0}
 						onChange={handleChange}
 						min="1"
 						step="1"
