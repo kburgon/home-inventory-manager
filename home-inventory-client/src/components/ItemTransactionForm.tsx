@@ -1,28 +1,47 @@
-import { useState } from 'react';
+import { count } from 'console';
+import { useRef, useState } from 'react';
 // import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
 
 function ItemTransactionForm() {
-	const [inputs, setInputs] = useState(
-		{
-			productId : "", 
-			count : 0,
-			submitMsg: "",
-			scanResult: "",
-			productName: ""
-		});
-
-	const handleChange = (event:any) => {
-		const name = event.target.name;
-		const value = event.target.value;
-		setInputs(values => ({...values, [name]:value}));
-	};
+	const [productId, setProductId] = useState(0);
+	const [count, setCount] = useState(0);
+	const [submitMsg, setSubmitMsg] = useState("");
 
 	const handleSubmit = (event:any) => {
 		event.preventDefault();
 		const submitter = event.nativeEvent.submitter.name;
-		// TODO: Send graphql call to save items
-		setInputs(values => ({...values, submitMsg:submitter + ' ' + inputs.count + ' for ' + inputs.productId}));
+		var adjustment = submitter === 'removeItems' ? count * -1 : count;
+		console.log('Submitted adjustment amount: ' + adjustment);
+		console.log('productId type' + typeof(productId));
+		var requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ productId: productId, stockAdjustment: count })
+		}
+
+		fetch('http://localhost:5223/api/adjustStock', requestOptions)
+		.then(response => {
+			if (response.ok)
+				setSubmitMsg('Stock of ' + productId + ' adjusted by ' + adjustment.toString() + '.');
+			else
+				setSubmitMsg('Response returned with status code ' + response.status.toString());
+		})
+		.catch(error => {
+			console.log(error.message);
+			console.log(error.method);
+			setSubmitMsg('ERROR: ' + error.message);
+		})
+		setSubmitMsg(submitter + ' ' + count + ' for ' + productId);
+	}
+
+	const scrubNum = (value: string) => {
+		const result = value.replace(/\D/g, '');
+		if (result === '') {
+			return '0';
+		}
+
+		return result;
 	}
 	
 	// const handleScanBarcode = (result: Result) => {
@@ -36,30 +55,15 @@ function ItemTransactionForm() {
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
-				<div className="scanner">
-				{/* <BarcodeScanner onResult={handleScanBarcode} onError={handleScanBarcodeError} /> */}
-					<span>{inputs.scanResult}</span>
-				</div>
 				<div className="inputRow">
-					<label className="inputColumn1" >Item Number: </label>
+					<label className="inputColumn1" >Product ID: </label>
 					<input 
 						className="inputColumn2"
 						type="text" 
-						id="itemBarcodeInput" 
-						name="itemBarcode"
-						value={inputs.productId || ""}
-						onChange={handleChange}
-					/>
-				</div>
-				<div className="inputRow">
-					<label className="inputColumn1" >Product: </label>
-					<input 
-						className="inputColumn2"
-						type="text" 
-						id="productInput" 
-						name="product"
-						value={inputs.productName || ""}
-						onChange={handleChange}
+						id="productIdInput" 
+						name="productId"
+						defaultValue={productId}
+						onChange={event => {setProductId(parseInt(scrubNum(event.target.value)))}}
 					/>
 				</div>
 				<div className="inputRow">
@@ -67,10 +71,10 @@ function ItemTransactionForm() {
 					<input 
 						className="inputColumn2"
 						type="number" 
-						id="transactionAmountInput" 
-						name="transactionAmount"
-						value={inputs.count || 0}
-						onChange={handleChange}
+						id="countInput" 
+						name="count"
+						defaultValue={count}
+						onChange={event => {setCount(parseInt(scrubNum(event.target.value)))}}
 						min="1"
 						step="1"
 					/>
@@ -80,7 +84,7 @@ function ItemTransactionForm() {
 					<input className="transSubmit" type="submit" name="removeItems" value="Remove Items" />
 				</div>
 				<div className="msgRow">
-					<p>{inputs.submitMsg}</p>
+					<p>{submitMsg}</p>
 				</div>
 			</form>
 		</>
