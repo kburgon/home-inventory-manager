@@ -1,10 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/glebarez/go-sqlite"
 )
 
 var sampleProducts = []Product{
@@ -35,4 +37,24 @@ func adjustStock(c *gin.Context) {
 	c.Status(204)
 }
 
+func getSqliteVersion(c *gin.Context) {
+	db, err := sql.Open("sqlite", "./inventory.db")
+	if err != nil {
+		fmt.Println("getSqliteVersion: Error connecting to database")
+		fmt.Println(err)
+		c.AbortWithError(500, err)
+	}
 
+	defer db.Close()
+	fmt.Println("Connected to sqlite db successfully")
+
+	var sqliteVersion string
+	err = db.QueryRow("select sqlite_version()").Scan(&sqliteVersion)
+	if err != nil {
+		fmt.Println("getSqliteVersion: Error capturing sqlite version")
+		fmt.Println(err)
+		c.AbortWithError(500, err)
+	}
+
+	c.Data(200, "application/text", []byte(sqliteVersion))
+}

@@ -25,6 +25,7 @@ func main() {
 	router.Use(handleCORS())
 	router.GET("/api/products/all", getProducts)
 	router.POST("/api/adjustStock", adjustStock)
+	router.GET("/api/db/version", getSqliteVersion)
 
 	router.Run("localhost:5223")
 }
