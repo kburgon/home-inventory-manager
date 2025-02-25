@@ -458,3 +458,6 @@ cook
 
 # Environment files
 *.env
+
+# sqlite db files
+*.db
