@@ -9,6 +9,8 @@ import (
 	_ "github.com/glebarez/go-sqlite"
 )
 
+var dbName string = "inventory.db"
+
 var sampleProducts = []Product{
 	{ Id: 1, ProductName: "Bread", Count: 4, WarningThreshold: 1 },
 	{ Id: 2, ProductName: "Eggs", Count: 2, WarningThreshold: 1 },
@@ -16,7 +18,28 @@ var sampleProducts = []Product{
 }
 
 func getProducts(c *gin.Context) {
-	c.JSON(http.StatusOK, sampleProducts)
+	db, err := sql.Open("sqlite", dbName)
+	if (err != nil) {
+		c.AbortWithError(500, err)
+	}
+
+	defer db.Close()
+
+	sql := `SELECT * FROM products`
+	rows, err := db.Query(sql)
+	defer rows.Close()
+	var products []Product
+	for (rows.Next()) {
+		p := &Product{}
+		err := rows.Scan(&p.Id, &p.ProductName, &p.Count, &p.WarningThreshold)
+		if (err != nil) {
+			c.AbortWithError(500, err)
+		}
+
+		products = append(products, *p)
+	}
+
+	c.JSON(http.StatusOK, products)
 }
 
 func adjustStock(c *gin.Context) {
