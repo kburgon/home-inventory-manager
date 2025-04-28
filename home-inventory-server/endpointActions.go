@@ -39,6 +39,11 @@ func getProducts(c *gin.Context) {
 		products = append(products, *p)
 	}
 
+	if products == nil {
+		c.JSON(http.StatusOK, sampleProducts)
+		return
+	}
+
 	c.JSON(http.StatusOK, products)
 }
 
