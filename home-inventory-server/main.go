@@ -22,6 +22,8 @@ func initDb() error {
 		warningThreshold INTEGER NOT NULL
 	);`
 
+	baseProductTableInsert := `INSERT INTO products (productName, count, warningThreshold) VALUES ('Bread', 1, 1)`
+
 	productInventoryAudit := `CREATE TABLE IF NOT EXISTS productInventoryAudit (
 		id INTEGER PRIMARY KEY,
 		productId INTEGER NOT NULL,
@@ -29,12 +31,24 @@ func initDb() error {
 		FOREIGN KEY (productId) REFERENCES products (id)
 	);`
 
+	productInventoryAuditInsert := `INSERT INTO productInventoryAudit (productId, adjustmentAmount) VALUES (1, 1)`
+
 	_, err = db.Exec(productTable)
 	if (err != nil) {
 		return err
 	}
 
 	_, err = db.Exec(productInventoryAudit)
+	if (err != nil) {
+		return err
+	}
+
+	_, err = db.Exec(baseProductTableInsert)
+	if (err != nil) {
+		return err
+	}
+
+	_, err = db.Exec(productInventoryAuditInsert)
 	if (err != nil) {
 		return err
 	}
