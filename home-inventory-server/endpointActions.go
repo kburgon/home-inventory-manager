@@ -17,13 +17,22 @@ var sampleProducts = []Product{
 	{ Id: 3, ProductName: "Milk", Count: 0, WarningThreshold: 1 },
 }
 
-func getProducts(c *gin.Context) {
+func openDb() (*sql.DB, error) {
 	db, err := sql.Open("sqlite", dbName)
 	if (err != nil) {
-		c.AbortWithError(500, err)
+		return nil, err
 	}
 
 	defer db.Close()
+	return db, err
+}
+
+func getProducts(c *gin.Context) {
+	db, err := openDb()
+	if (err != nil) {
+		c.AbortWithError(500, err)
+		return
+	}
 
 	sql := `SELECT * FROM products`
 	rows, err := db.Query(sql)
@@ -47,11 +56,33 @@ func getProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, products)
 }
 
+func createProduct(c *gin.Context) {
+	var product Product
+	if err := c.BindJSON(&product); err != nil {
+		fmt.Println(err)
+		c.AbortWithError(400, err)
+	}
+
+	db, err := openDb()
+	if (err != nil) {
+		c.AbortWithError(500, err)
+		return
+	}
+
+	result, err := db.Exec("INSERT INTO products (productName, count, WarningThreshold) VALUES (?, ?, ?)", product.ProductName, product.Count, product.WarningThreshold)
+	if (err != nil) {
+		c.AbortWithError(500, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
+}
+
 func adjustStock(c *gin.Context) {
 	var adjustment StockAdjustment
 	if err := c.BindJSON(&adjustment); err != nil {
 		fmt.Println("adjustStock: Failed to parse request body")
-		c.AbortWithError(500, err)
+		c.AbortWithError(400, err)
 	}
 
 	for _, product := range sampleProducts {
