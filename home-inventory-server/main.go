@@ -73,6 +73,7 @@ func initDb() error {
 			return err
 		}
 	}
+
 	return nil
 }
 
