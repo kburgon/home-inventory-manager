@@ -23,7 +23,6 @@ func openDb() (*sql.DB, error) {
 		return nil, err
 	}
 
-	defer db.Close()
 	return db, err
 }
 
@@ -47,6 +46,8 @@ func getProducts(c *gin.Context) {
 
 		products = append(products, *p)
 	}
+
+	defer db.Close()
 
 	if products == nil {
 		c.JSON(http.StatusOK, sampleProducts)
@@ -75,6 +76,7 @@ func createProduct(c *gin.Context) {
 		return
 	}
 
+	defer db.Close()
 	c.JSON(http.StatusOK, result)
 }
 

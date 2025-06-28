@@ -12,7 +12,7 @@ function InventoryView() {
 	]);
 
 	useEffect(() => {
-		fetch('http://localhost:5223/api/products/all')
+		fetch('http://localhost:5223/api/products')
 			.then((response) => response.json())
 			.then((data) => {
 				console.log(data);

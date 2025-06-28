@@ -22,10 +22,6 @@ func initDb() error {
 		warningThreshold INTEGER NOT NULL
 	);`
 
-	baseProductTableQuery := `SELECT id FROM products WHERE productName = 'Bread';`
-
-	baseProductTableInsert := `INSERT INTO products (productName, count, warningThreshold) VALUES ('Bread', 1, 1);`
-
 	productInventoryAudit := `CREATE TABLE IF NOT EXISTS productInventoryAudit (
 		id INTEGER PRIMARY KEY,
 		productId INTEGER NOT NULL,
@@ -33,10 +29,6 @@ func initDb() error {
 		adjustedAt TEXT NOT NULL,
 		FOREIGN KEY (productId) REFERENCES products (id)
 	);`
-
-	productInventoryAuditQuery := `SELECT * FROM productInventoryAudit WHERE productId = 1;`
-
-	productInventoryAuditInsert := `INSERT INTO productInventoryAudit (productId, adjustmentAmount, datetime()) VALUES (1, 1)`
 
 	_, err = db.Exec(productTable)
 	if (err != nil) {
@@ -46,32 +38,6 @@ func initDb() error {
 	_, err = db.Exec(productInventoryAudit)
 	if (err != nil) {
 		return err
-	}
-
-	// Check to see if the default product already exists
-	result, err := db.Query(baseProductTableQuery)
-	if (err != nil) {
-		return err
-	}
-	
-	if (!result.Next()) {
-		_, err = db.Exec(baseProductTableInsert)
-		if (err != nil) {
-			return err
-		}
-	}
-
-	// Insert a default record into the audit table if a record doesn't already exist.
-	result, err = db.Query(productInventoryAuditQuery)
-	if (err != nil) {
-		return err
-	}
-
-	if (!result.Next()) {
-		_, err = db.Exec(productInventoryAuditInsert)
-		if (err != nil) {
-			return err
-		}
 	}
 
 	return nil
@@ -97,7 +63,7 @@ func main() {
 	initDb()
 	router := gin.Default()
 	router.Use(handleCORS())
-	router.GET("/api/products/all", getProducts)
+	router.GET("/api/products", getProducts)
 	router.POST("/api/products", createProduct)
 	router.POST("/api/adjustStock", adjustStock)
 	router.GET("/api/db/version", getSqliteVersion)
