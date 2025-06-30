@@ -29,6 +29,7 @@ func openDb() (*sql.DB, error) {
 func getProducts(c *gin.Context) {
 	db, err := openDb()
 	if (err != nil) {
+		fmt.Printf("Error opening DB: %s\n", err)
 		c.AbortWithError(500, err)
 		return
 	}
@@ -41,8 +42,9 @@ func getProducts(c *gin.Context) {
 		p := &Product{}
 		err := rows.Scan(&p.Id, &p.ProductName, &p.Count, &p.WarningThreshold)
 		if (err != nil) {
+			fmt.Printf("Error querying products: %s\n", err)
 			c.AbortWithError(500, err)
-		}
+	}
 
 		products = append(products, *p)
 	}
@@ -60,18 +62,41 @@ func getProducts(c *gin.Context) {
 func createProduct(c *gin.Context) {
 	var product Product
 	if err := c.BindJSON(&product); err != nil {
-		fmt.Println(err)
+		fmt.Printf("Error parsing product: %s\n", err)
 		c.AbortWithError(400, err)
 	}
 
+	fmt.Println("Opening DB")
 	db, err := openDb()
 	if (err != nil) {
+		fmt.Printf("Error opening DB: %s\n", err)
 		c.AbortWithError(500, err)
 		return
 	}
 
+	fmt.Println("Checking for match")
+	existingProductResult, err := db.Query("SELECT id FROM products WHERE productName = ?", product.ProductName)
+	if (err != nil) {
+		fmt.Printf("Error at product name check: %s", err)
+		c.AbortWithError(500, err)
+		return
+	}
+
+	if (existingProductResult.Next()) {
+		result := BadRequestMsg {
+			StatusCode: 400,
+			Message: "Product already exists",
+			FieldName: "ProductName",
+		}
+
+		c.AbortWithStatusJSON(400, result)
+		return
+	}
+
+	fmt.Println("Inserting product")
 	result, err := db.Exec("INSERT INTO products (productName, count, WarningThreshold) VALUES (?, ?, ?)", product.ProductName, product.Count, product.WarningThreshold)
 	if (err != nil) {
+		fmt.Print("Error inserting: %s\n", err)
 		c.AbortWithError(500, err)
 		return
 	}

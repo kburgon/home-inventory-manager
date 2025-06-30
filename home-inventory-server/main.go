@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/glebarez/go-sqlite"
@@ -10,10 +11,10 @@ import (
 func initDb() error {
 	db, err := sql.Open("sqlite", "./inventory.db")
 	if (err != nil) {
+		fmt.Printf("Error opening db: %s\n")
 		return err
 	}
 
-	defer db.Close()
 
 	productTable := `CREATE TABLE IF NOT EXISTS products (
 		id INTEGER PRIMARY KEY,
@@ -30,16 +31,21 @@ func initDb() error {
 		FOREIGN KEY (productId) REFERENCES products (id)
 	);`
 
+	fmt.Println("Creating product table")
 	_, err = db.Exec(productTable)
 	if (err != nil) {
+		fmt.Printf("Error creating product table: %s\n", err)
 		return err
 	}
 
+	fmt.Println("Creating product inventory table")
 	_, err = db.Exec(productInventoryAudit)
 	if (err != nil) {
+		fmt.Printf("Error creating product inventory table: %s\n", err)
 		return err
 	}
 
+	defer db.Close()
 	return nil
 }
 

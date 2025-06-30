@@ -11,3 +11,9 @@ type StockAdjustment struct {
 	ProductId		int	`json:"productId"`
 	StockAdjustment	int	`json:"stockAdjustment"`
 }
+
+type BadRequestMsg struct {
+	FieldName	string	`json:"field"`
+	Message		string	`json:"message"`
+	StatusCode	int		`json:"status"`
+}

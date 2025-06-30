@@ -13,12 +13,13 @@ function InventoryView() {
 
 	useEffect(() => {
 		fetch('http://localhost:5223/api/products')
-			.then((response) => response.json())
+			.then((response) => response.text())
+			.then((resText) => resText.length > 0 ? JSON.parse(resText) : {})
 			.then((data) => {
 				console.log(data);
 				setItems(data);
 			})
-			.catch((err) => { console.log(err.message); });
+			.catch((err) => console.log(err.message));
 	}, []);
 
 	items.sort((a, b) => a.count > b.count ? 1 : -1);
