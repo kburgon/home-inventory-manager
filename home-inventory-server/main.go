@@ -11,7 +11,7 @@ import (
 func initDb() error {
 	db, err := sql.Open("sqlite", "./inventory.db")
 	if (err != nil) {
-		fmt.Printf("Error opening db: %s\n")
+		fmt.Println("Error opening db")
 		return err
 	}
 
