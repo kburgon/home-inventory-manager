@@ -30,6 +30,7 @@ func getProducts(c *gin.Context) {
 	db, err := openDb()
 	if (err != nil) {
 		fmt.Printf("Error opening DB: %s\n", err)
+		defer db.Close()
 		c.AbortWithError(500, err)
 		return
 	}
@@ -43,6 +44,7 @@ func getProducts(c *gin.Context) {
 		err := rows.Scan(&p.Id, &p.ProductName, &p.Count, &p.WarningThreshold)
 		if (err != nil) {
 			fmt.Printf("Error querying products: %s\n", err)
+			defer db.Close()
 			c.AbortWithError(500, err)
 	}
 
@@ -78,6 +80,7 @@ func createProduct(c *gin.Context) {
 	existingProductResult, err := db.Query("SELECT id FROM products WHERE productName = ?", product.ProductName)
 	if (err != nil) {
 		fmt.Printf("Error at product name check: %s", err)
+		defer db.Close()
 		c.AbortWithError(500, err)
 		return
 	}
@@ -89,6 +92,8 @@ func createProduct(c *gin.Context) {
 			FieldName: "ProductName",
 		}
 
+		defer existingProductResult.Close()
+		defer db.Close()
 		c.AbortWithStatusJSON(400, result)
 		return
 	}
@@ -96,7 +101,8 @@ func createProduct(c *gin.Context) {
 	fmt.Println("Inserting product")
 	result, err := db.Exec("INSERT INTO products (productName, count, WarningThreshold) VALUES (?, ?, ?)", product.ProductName, product.Count, product.WarningThreshold)
 	if (err != nil) {
-		fmt.Print("Error inserting: %s\n", err)
+		fmt.Printf("Error inserting: %s\n", err)
+		defer db.Close()
 		c.AbortWithError(500, err)
 		return
 	}
@@ -128,6 +134,7 @@ func getSqliteVersion(c *gin.Context) {
 	if err != nil {
 		fmt.Println("getSqliteVersion: Error connecting to database")
 		fmt.Println(err)
+		defer db.Close()
 		c.AbortWithError(500, err)
 	}
 
@@ -139,6 +146,7 @@ func getSqliteVersion(c *gin.Context) {
 	if err != nil {
 		fmt.Println("getSqliteVersion: Error capturing sqlite version")
 		fmt.Println(err)
+		defer db.Close()
 		c.AbortWithError(500, err)
 	}
 
