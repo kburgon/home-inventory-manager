@@ -71,7 +71,7 @@ func main() {
 	router.Use(handleCORS())
 	router.GET("/api/products", getProducts)
 	router.POST("/api/products", createProduct)
-	router.PUT("/api/stock", adjustStock)
+	router.PUT("/api/products", updateProduct)
 	router.GET("/api/db/version", getSqliteVersion)
 
 	router.Run("localhost:5223")

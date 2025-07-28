@@ -111,64 +111,46 @@ func createProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-func adjustStock(c *gin.Context) {
-	var adjustment StockAdjustment
-	if err := c.BindJSON(&adjustment); err != nil {
-		fmt.Println("adjustStock: Failed to parse request body")
+func updateProduct(c *gin.Context) {
+	var rProduct Product
+	if err := c.BindJSON(&rProduct); err != nil {
+		fmt.Printf("Error parsing product: %s\n", err)
 		c.AbortWithError(400, err)
 	}
 
-	fmt.Println("adjustStock: Opening DB")
+	fmt.Println("Opening DB")
 	db, err := openDb()
 	if (err != nil) {
-		fmt.Printf("Error opening DB: %s\n", err)
 		defer db.Close()
 		c.AbortWithError(500, err)
+		fmt.Printf("Error opening DB: %s", err)
 		return
 	}
 
-	prodResults, err := db.Query("SELECT count FROM products where id = ?", adjustment.ProductId)
+	fmt.Println("Querying for product")
+	var dProduct Product
+	err = db.QueryRow("SELECT id, productName, count, warningThreshold FROM products WHERE id = ?", rProduct.Id).Scan(&dProduct.Id, &dProduct.ProductName, &dProduct.Count, &dProduct.WarningThreshold)
 	if (err != nil) {
-		fmt.Printf("Error querying products: %s\n", err)
 		defer db.Close()
 		c.AbortWithError(500, err)
+		fmt.Printf("Error querying product with ID %d: %s\n", rProduct.Id, err)
 		return
 	}
 
-	if (prodResults.Next()) {
-		var count int = 0
-		prodResults.Scan(count)
-		prodResults.Close()
-		adjustedStock := adjustment.StockAdjustment + count
-
-		updateResult, err := db.Exec("UPDATE products SET count = ? WHERE id = ?", adjustedStock, adjustment.ProductId)
-		if (err != nil) {
-			fmt.Printf("Error updating stock: %s\n", err)
-			defer db.Close()
-			c.AbortWithError(500, err)
-			return
-		}
-		
-		affectedRows, err := updateResult.RowsAffected()
-		if (err != nil) {
-			fmt.Printf("Error getting number of rows updated: %s\n", err)
-			defer db.Close()
-			c.AbortWithError(500, err)
-			return
-		}
-
-		fmt.Printf("adjustStock: Update rows affected: %d\n", affectedRows)
+	if (dProduct.Id < 1) {
+		defer db.Close()
+		fmt.Println("Creating product")
+		createProduct(c)
+		return
 	}
-	//
-	// for _, product := range sampleProducts {
-	// 	if product.Id == adjustment.ProductId {
-	// 		product.Count = product.Count + adjustment.StockAdjustment
-	// 		fmt.Printf("ProductID: %d, Adjustment: %d, NewTotal: %d", product.Id, adjustment.StockAdjustment, product.Count)
-	// 		break;
-	// 	}
-	// }
 
-	c.Status(204)
+	_, err = db.Exec("UPDATE products SET productName = ?, count = ?, warningThreshold = ? WHERE id = ?", rProduct.ProductName, rProduct.Count, rProduct.WarningThreshold, rProduct.Id)
+	if (err != nil) {
+		defer db.Close()
+		c.AbortWithError(500, err)
+		fmt.Printf("Error updating product: %s\n", err)
+		return
+	}
 }
 
 func getSqliteVersion(c *gin.Context) {
