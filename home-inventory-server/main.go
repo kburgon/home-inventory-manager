@@ -23,25 +23,10 @@ func initDb() error {
 		warningThreshold INTEGER NOT NULL
 	);`
 
-	productInventoryAudit := `CREATE TABLE IF NOT EXISTS productInventoryAudit (
-		id INTEGER PRIMARY KEY,
-		productId INTEGER NOT NULL,
-		adjustmentAmount INTEGER NOT NULL,
-		adjustedAt TEXT NOT NULL,
-		FOREIGN KEY (productId) REFERENCES products (id)
-	);`
-
 	fmt.Println("Creating product table")
 	_, err = db.Exec(productTable)
 	if (err != nil) {
 		fmt.Printf("Error creating product table: %s\n", err)
-		return err
-	}
-
-	fmt.Println("Creating product inventory table")
-	_, err = db.Exec(productInventoryAudit)
-	if (err != nil) {
-		fmt.Printf("Error creating product inventory table: %s\n", err)
 		return err
 	}
 
