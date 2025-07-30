@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/glebarez/go-sqlite"
@@ -59,6 +60,44 @@ func getProducts(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, products)
+}
+
+func getProduct(c *gin.Context) {
+	productId, err := strconv.Atoi(c.Param("id"))
+	if (err != nil) {
+		fmt.Printf("Error parsing request parameter: %s\n", err)
+		c.AbortWithError(500, err)
+		return
+	}
+
+	if (productId <= 0) {
+		failureMessage := BadRequestMsg {
+			FieldName: "id",
+			Message: "Invalid product ID.",
+			StatusCode: 400,
+		}
+
+		c.AbortWithStatusJSON(400, failureMessage)
+		return
+	}
+
+	db, err := openDb()
+	if (err != nil) {
+		fmt.Printf("Error opening DB: %s\n", err)
+		c.AbortWithError(500, err)
+		return
+	}
+
+	var product Product
+	err = db.QueryRow("SELECT id, productName, count, warningThreshold FROM products WHERE id = ?", productId).Scan(&product.Id, &product.ProductName, &product.Count, &product.WarningThreshold)
+	if (err != nil) {
+		defer db.Close()
+		fmt.Printf("Error querying for products: %s\n", err)
+		c.AbortWithError(500, err)
+		return
+	}
+
+	c.JSON(200, product)
 }
 
 func createProduct(c *gin.Context) {

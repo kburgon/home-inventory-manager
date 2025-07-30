@@ -55,6 +55,7 @@ func main() {
 	router := gin.Default()
 	router.Use(handleCORS())
 	router.GET("/api/products", getProducts)
+	router.GET("/api/products/:id", getProduct)
 	router.POST("/api/products", createProduct)
 	router.PUT("/api/products", updateProduct)
 	router.GET("/api/db/version", getSqliteVersion)

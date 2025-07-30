@@ -1,38 +1,54 @@
-import { count } from 'console';
-import { useRef, useState } from 'react';
+import { responsePathAsArray } from 'graphql';
+import { resolve } from 'path';
+import { useState } from 'react';
 // import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
+import { Product } from './Models/Product';
 
 function ItemTransactionForm() {
 	const [productId, setProductId] = useState(0);
 	const [count, setCount] = useState(0);
 	const [submitMsg, setSubmitMsg] = useState("");
 
-	const handleSubmit = (event:any) => {
-		event.preventDefault();
-		const submitter = event.nativeEvent.submitter.name;
-		var adjustment = submitter === 'removeItems' ? count * -1 : count;
-		console.log('Submitted adjustment amount: ' + adjustment);
-		console.log('productId type' + typeof(productId));
-		var requestOptions = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ productId: productId, stockAdjustment: count })
-		}
+	const handleSubmit = async (event:any) => {
+		try {
+			event.preventDefault();
+			var product: Product = { id: 0, productName: '', count: 0, warningThreshold: 0 };
+			var productResult = await fetch(`http://localhost:5223/api/products/${productId}`, {
+				method: 'GET',
+			headers: { 'Content-Type': 'application/json'}
+			});
 
-		fetch('http://localhost:5223/api/adjustStock', requestOptions)
-		.then(response => {
-			if (response.ok)
-				setSubmitMsg('Stock of ' + productId + ' adjusted by ' + adjustment.toString() + '.');
-			else
-				setSubmitMsg('Response returned with status code ' + response.status.toString());
-		})
-		.catch(error => {
-			console.log(error.message);
-			console.log(error.method);
-			setSubmitMsg('ERROR: ' + error.message);
-		})
-		setSubmitMsg(submitter + ' ' + count + ' for ' + productId);
+			product = (await productResult.json()) as Product;
+			console.log(`Found product name: ${product.productName}`);
+			if (product != null && product.id !== productId) {
+				console.log('unable to fetch ProductId');
+				return;
+			}
+
+			const submitter = event.nativeEvent.submitter.name;
+			var adjustment = submitter === 'removeItems' ? count * -1 : count;
+			console.log(`Submitted adjustment amount: ${adjustment}`);
+			product.count += adjustment;
+
+			var requestOptions = {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(product)
+			}
+
+			var adjustResult = await fetch('http://localhost:5223/api/products', requestOptions);
+			if (adjustResult.ok) {
+				setSubmitMsg(`Stock of ${product.productName} adjusted by ${adjustment}.`);
+			}
+			else {
+				setSubmitMsg(`Response returned with status code ${adjustResult.status}`);
+			}
+		}
+		catch (error)
+		{
+			setSubmitMsg(`Error encountered: ${error}`);
+		}
 	}
 
 	const scrubNum = (value: string) => {
