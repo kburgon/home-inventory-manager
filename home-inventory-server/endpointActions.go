@@ -89,12 +89,33 @@ func getProduct(c *gin.Context) {
 	}
 
 	var product Product
-	err = db.QueryRow("SELECT id, productName, count, warningThreshold FROM products WHERE id = ?", productId).Scan(&product.Id, &product.ProductName, &product.Count, &product.WarningThreshold)
+	rows, err := db.Query("SELECT id, productName, count, warningThreshold FROM products WHERE id = ?", productId)
 	if (err != nil) {
 		defer db.Close()
 		fmt.Printf("Error querying for products: %s\n", err)
 		c.AbortWithError(500, err)
 		return
+	}
+
+	if (!rows.Next()) {
+		defer rows.Close()
+		defer db.Close()
+		failureResponse := BadRequestMsg {
+			FieldName: "productId",
+			StatusCode: 400,
+			Message: "No product found matching the given ID.",
+		}
+
+		c.AbortWithStatusJSON(failureResponse.StatusCode, failureResponse)
+		return
+	}
+
+	err = rows.Scan(&product.Id, &product.ProductName, &product.Count, &product.WarningThreshold)
+	defer rows.Close()
+	defer db.Close()
+	if (err != nil) {
+		fmt.Printf("Error parsing DB response: %s\n", err)
+		c.AbortWithError(500, err)
 	}
 
 	c.JSON(200, product)

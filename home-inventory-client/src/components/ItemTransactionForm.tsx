@@ -1,5 +1,3 @@
-import { responsePathAsArray } from 'graphql';
-import { resolve } from 'path';
 import { useState } from 'react';
 // import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
@@ -16,8 +14,14 @@ function ItemTransactionForm() {
 			var product: Product = { id: 0, productName: '', count: 0, warningThreshold: 0 };
 			var productResult = await fetch(`http://localhost:5223/api/products/${productId}`, {
 				method: 'GET',
-			headers: { 'Content-Type': 'application/json'}
+				headers: { 'Content-Type': 'application/json'}
 			});
+
+			if (productResult.status === 400) {
+				var message = (await productResult.json()).message;
+				setSubmitMsg(`Bad request: ${message}`);
+				return;
+			}
 
 			product = (await productResult.json()) as Product;
 			console.log(`Found product name: ${product.productName}`);
@@ -38,7 +42,7 @@ function ItemTransactionForm() {
 			}
 
 			var adjustResult = await fetch('http://localhost:5223/api/products', requestOptions);
-			if (adjustResult.ok) {
+			if (adjustResult.status === 200) {
 				setSubmitMsg(`Stock of ${product.productName} adjusted by ${adjustment}.`);
 			}
 			else {
