@@ -85,17 +85,6 @@ function ItemTransactionForm() {
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
-				<div className="inputRow">
-					<label className="inputColumn1" >Product: </label>
-					<input 
-						className="inputColumn2"
-						type="text" 
-						id="productIdInput" 
-						name="productId"
-						defaultValue={productId}
-						onChange={event => {setProductId(parseInt(scrubNum(event.target.value)))}}
-					/>
-				</div>
 				<div className='inputRow'>
 					<label className='inputColumn1' >Product: </label>
 					<ProductSelector 
