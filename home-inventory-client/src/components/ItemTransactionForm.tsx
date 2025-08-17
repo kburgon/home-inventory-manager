@@ -66,7 +66,11 @@ function ItemTransactionForm() {
 	}
 	
     const onProductFetchResult = (success: boolean, message: string) => {
-		setSubmitMsg(`Product fetch success: ${success}, Message: ${message}`);
+		var messageTxt = "";
+		if (message !== "") {
+			messageTxt = `, Message: ${message}`;
+		}
+		setSubmitMsg(`Product fetch success: ${success}${messageTxt}`);
     }
 
 	const onProductSelected = (productId: number) => {

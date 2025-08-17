@@ -1,0 +1,7 @@
+.productSelect {
+	display: inline-block;
+	text-align: left;
+	/* margin-left: 10px; */
+	width: 225px;
+	height: 50px;
+}
