@@ -2,6 +2,7 @@ import { useState } from 'react';
 // import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
 import { Product } from './Models/Product';
+import ProductSelector from './ProductSelector';
 
 function ItemTransactionForm() {
 	const [productId, setProductId] = useState(0);
@@ -64,6 +65,15 @@ function ItemTransactionForm() {
 		return result;
 	}
 	
+    const onProductFetchResult = (success: boolean, message: string) => {
+		setSubmitMsg(`Product fetch success: ${success}, Message: ${message}`);
+    }
+
+	const onProductSelected = (productId: number) => {
+		setProductId(productId);
+		console.log(`Set product ID: ${productId}`);
+	}
+
 	// const handleScanBarcode = (result: Result) => {
 	// 	setInputs(values => ({...values, itemBarcode:result.toString()}));
 	// }
@@ -76,7 +86,7 @@ function ItemTransactionForm() {
 		<>
 			<form onSubmit={handleSubmit}>
 				<div className="inputRow">
-					<label className="inputColumn1" >Product ID: </label>
+					<label className="inputColumn1" >Product: </label>
 					<input 
 						className="inputColumn2"
 						type="text" 
@@ -84,6 +94,13 @@ function ItemTransactionForm() {
 						name="productId"
 						defaultValue={productId}
 						onChange={event => {setProductId(parseInt(scrubNum(event.target.value)))}}
+					/>
+				</div>
+				<div className='inputRow'>
+					<label className='inputColumn1' >Product: </label>
+					<ProductSelector 
+						onProductFetchResult={onProductFetchResult} 
+						onProductSelected={onProductSelected} 
 					/>
 				</div>
 				<div className="inputRow">
