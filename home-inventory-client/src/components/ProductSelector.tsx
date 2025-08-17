@@ -1,5 +1,7 @@
+import { fallbackHttpConfig } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { Product } from './Models/Product';
+import NewProductPopup from './NewProductPopup';
 
 import "./ProductSelector.css";
 
@@ -10,6 +12,7 @@ interface ProductSelectorProps {
 
 function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSelectorProps) {
 	const [products, setProducts] = useState<Product[]>([]);
+	const [viewNewProduct, setViewNewProduct] = useState<boolean>(false);
 	const newProductSelector: string = "new";
 
 	useEffect(() => {
@@ -47,7 +50,6 @@ function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSel
 		const productId = event.target.value;
 		if (productId === newProductSelector) {
 			console.log("New product selected");
-			onProductSelected(0);
 			return;
 		}
 
@@ -64,6 +66,7 @@ function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSel
 			}
 				<option value={newProductSelector} key="0">New...</option>
 			</select>
+			
 		</>
 	)
 }
