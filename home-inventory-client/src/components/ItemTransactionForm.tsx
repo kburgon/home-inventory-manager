@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import Modal from 'react-modal';
 // import { Result } from '@zxing/library';
 import "./ItemTransactionForm.css";
 import { Product } from './Models/Product';
+import NewProductPopup from './NewProductPopup';
 import ProductSelector from './ProductSelector';
 
 function ItemTransactionForm() {
 	const [productId, setProductId] = useState(0);
 	const [count, setCount] = useState(0);
 	const [submitMsg, setSubmitMsg] = useState("");
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	const handleSubmit = async (event:any) => {
 		try {
@@ -73,9 +76,19 @@ function ItemTransactionForm() {
 		setSubmitMsg(`Product fetch success: ${success}${messageTxt}`);
     }
 
-	const onProductSelected = (productId: number) => {
+	const onProductSelected = (productId: number | 'new') => {
+		if (productId === 'new') {
+			console.log('Opening new product popup');
+			setIsOpen(true);
+			return;
+		}
+
 		setProductId(productId);
 		console.log(`Set product ID: ${productId}`);
+	}
+
+	const onNewProductSubmitted = (product: Product) => {
+		console.log('New product name: ' + product.productName);
 	}
 
 	// const handleScanBarcode = (result: Result) => {
@@ -108,6 +121,16 @@ function ItemTransactionForm() {
 						min="1"
 						step="1"
 					/>
+					<Modal 
+						isOpen={isOpen}
+						onRequestClose={() => setIsOpen(false)}
+						contentLabel="Test Modal"
+						className="modal-content"
+						overlayClassName="modal-overlay"
+						>
+						<NewProductPopup onNewProductSubmitted={onNewProductSubmitted} />
+						<button onClick={() => setIsOpen(false)}>Close</button>
+					</Modal>
 				</div>
 				<div className="inputRow">
 					<input className="transSubmit" type="submit" name="addItems" value="Add Items" />

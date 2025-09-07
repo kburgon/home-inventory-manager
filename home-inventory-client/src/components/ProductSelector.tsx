@@ -1,4 +1,3 @@
-import { fallbackHttpConfig } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { Product } from './Models/Product';
 import NewProductPopup from './NewProductPopup';
@@ -6,13 +5,12 @@ import NewProductPopup from './NewProductPopup';
 import "./ProductSelector.css";
 
 interface ProductSelectorProps {
-	onProductSelected: (productId: number) => void;
+	onProductSelected: (productId: number | 'new') => void;
 	onProductFetchResult: (success: boolean, message: string) => void;
 }
 
 function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSelectorProps) {
 	const [products, setProducts] = useState<Product[]>([]);
-	const [viewNewProduct, setViewNewProduct] = useState<boolean>(false);
 	const newProductSelector: string = "new";
 
 	useEffect(() => {
@@ -50,6 +48,7 @@ function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSel
 		const productId = event.target.value;
 		if (productId === newProductSelector) {
 			console.log("New product selected");
+			onProductSelected('new');
 			return;
 		}
 
@@ -59,12 +58,13 @@ function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSel
 	return (
 		<>
 			<select className='productSelect' onChange={handleProductSelection}>
+				<option value="" key="">Select...</option>
 			{
 				products.map(product => (
 					<option value={product.id} key={product.id}>{product.productName}</option>
 				))
 			}
-				<option value={newProductSelector} key="0">New...</option>
+				<option value={newProductSelector} key={newProductSelector}>New...</option>
 			</select>
 			
 		</>
