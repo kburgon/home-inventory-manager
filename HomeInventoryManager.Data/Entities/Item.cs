@@ -1,3 +1,0 @@
-namespace HomeInventoryManager.Data.Entities;
-
-
