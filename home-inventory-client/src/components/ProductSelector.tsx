@@ -1,59 +1,78 @@
 import { useEffect, useState } from 'react';
+import Modal from 'react-modal';
 import { Product } from './Models/Product';
 import NewProductPopup from './NewProductPopup';
 
 import "./ProductSelector.css";
 
 interface ProductSelectorProps {
-	onProductSelected: (productId: number | 'new') => void;
+	onProductSelected: (productId: number) => void;
 	onProductFetchResult: (success: boolean, message: string) => void;
 }
 
 function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSelectorProps) {
 	const [products, setProducts] = useState<Product[]>([]);
-	const newProductSelector: string = "new";
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 
-	useEffect(() => {
-		const getProducts = async () => {
-			var productResults = await fetch('http://localhost:5223/api/products', {
-				method: 'GET',
-				headers: { 'Content-Type': 'application/json' }
-			});
+	const getProducts = async () => {
+		var productResults = await fetch('http://localhost:5223/api/products', {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json' }
+		});
 
-			console.log(productResults);
-			switch (productResults.status) {
-				case 400:
-					var responseTxt = await productResults.text();
-					var response = JSON.parse(responseTxt);
-					onProductFetchResult(false, response.message);
-					break;
-				case 404:
-					onProductFetchResult(false, response.message);
-					break;
-				case 500:
-					onProductFetchResult(false, response.message);
-					break;
-				default:
-					var responseTxt = await productResults.text();
-					var p = JSON.parse(responseTxt);
-					onProductFetchResult(true, '');
-					setProducts(p);
-			}
+		console.log(productResults);
+		switch (productResults.status) {
+			case 400:
+				var badRequestBody = await productResults.text();
+			var response = JSON.parse(badRequestBody);
+			onProductFetchResult(false, response.message);
+			break;
+			case 404:
+				onProductFetchResult(false, response.message);
+			break;
+			case 500:
+				onProductFetchResult(false, response.message);
+			break;
+			default:
+				var responseTxt = await productResults.text();
+				var p = JSON.parse(responseTxt);
+				onProductFetchResult(true, '');
+				setProducts(p);
 		}
+	}
 
-		getProducts();
-	}, []);
+	const createProduct = async (product: Product) => {
+		var result = await fetch('http://localhost:5223/api/products', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(product)
+		});
+
+		switch (result.status) {
+			case 400:
+			case 500:
+				var responseTxt = await result.text();
+				var response = JSON.parse(responseTxt);
+				console.log(response);
+				break;
+			default:
+				await getProducts();
+		}
+	}
 
 	const handleProductSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const productId = event.target.value;
-		if (productId === newProductSelector) {
-			console.log("New product selected");
-			onProductSelected('new');
-			return;
-		}
-
 		onProductSelected(Number(productId));
 	}
+
+	const onNewProductSubmitted = async (product: Product) => {
+		await createProduct(product);
+		console.log('New product name: ' + product.productName);
+	}
+
+	useEffect(() => {
+		getProducts();
+	});
 
 	return (
 		<>
@@ -64,9 +83,18 @@ function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSel
 					<option value={product.id} key={product.id}>{product.productName}</option>
 				))
 			}
-				<option value={newProductSelector} key={newProductSelector}>New...</option>
 			</select>
-			
+			<button className='openNewProductButton' onClick={() => setIsOpen(true)} >+</button>
+			<Modal 
+				isOpen={isOpen}
+				onRequestClose={() => setIsOpen(false)}
+				contentLabel="Test Modal"
+				className="modal-content"
+				overlayClassName="modal-overlay"
+				>
+				<NewProductPopup onNewProductSubmitted={onNewProductSubmitted} />
+				<button onClick={() => setIsOpen(false)}>Close</button>
+			</Modal>
 		</>
 	)
 }
