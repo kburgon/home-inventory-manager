@@ -1,13 +1,14 @@
-import { warning } from "@remix-run/router/dist/history";
 import { useState } from "react";
 import { Product } from "./Models/Product";
-import ProductSelector from "./ProductSelector";
+
+import './NewProductPopup.css';
 
 interface NewProductPopupProps {
 	onNewProductSubmitted: (product: Product) => void;
+	onClosed: () => void;
 }
 
-function NewProductPopup({ onNewProductSubmitted }: NewProductPopupProps) {
+function NewProductPopup({ onNewProductSubmitted, onClosed }: NewProductPopupProps) {
 	var [productName, setProductName] = useState("");
 	var [warningThreshold, setWarningThreshold] = useState(0);
 
@@ -37,7 +38,10 @@ function NewProductPopup({ onNewProductSubmitted }: NewProductPopupProps) {
 				defaultValue={warningThreshold} 
 				onChange={event => setWarningThreshold(parseInt(event.target.value))} 
 				/>
-			<button value="Save" onClick={() => submitNewProduct()}>Save</button>
+			<div className="display-actions">
+				<button className="btnAction" value="Save" onClick={() => submitNewProduct()}>Save</button>
+				<button className="btnAction" value="Close" onClick={() => onClosed()}>Close</button>
+			</div>
 		</>
 	)
 }

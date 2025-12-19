@@ -1,3 +1,4 @@
+import { fallbackHttpConfig } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Product } from './Models/Product';
@@ -13,6 +14,32 @@ interface ProductSelectorProps {
 function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSelectorProps) {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
+
+	const modalStyles = {
+		overlay: {
+			backgroundColor: 'rgba(0, 0, 0, 0.75)',
+			zIndex: 10000,
+			position: 'fixed' as const,
+			top: 0,
+			bottom: 0,
+			left: 0,
+			right: 0
+		},
+		content: {
+			top: '50%',
+			left: '50%',
+			right: 'auto',
+			bottom: 'auto',
+			marginRight: '-50%',
+			transform: 'translate(-50%, -50%)',
+			padding: '5px',
+			maxWidth: '500px',
+			width: '95%',
+			borderRadius: '8px',
+			border: 'none',
+			boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+		}
+	}
 
 	const getProducts = async () => {
 		var productResults = await fetch('http://localhost:5223/api/products', {
@@ -68,11 +95,13 @@ function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSel
 	const onNewProductSubmitted = async (product: Product) => {
 		await createProduct(product);
 		console.log('New product name: ' + product.productName);
+		setIsOpen(false);
 	}
 
 	useEffect(() => {
+		Modal.setAppElement('#root');
 		getProducts();
-	});
+	}, []);
 
 	return (
 		<>
@@ -88,12 +117,18 @@ function ProductSelector({ onProductSelected, onProductFetchResult }: ProductSel
 			<Modal 
 				isOpen={isOpen}
 				onRequestClose={() => setIsOpen(false)}
-				contentLabel="Test Modal"
+				contentLabel="Add Product"
 				className="modal-content"
 				overlayClassName="modal-overlay"
+				shouldCloseOnOverlayClick={true}
+				shouldCloseOnEsc={true}
+				style={modalStyles}
+				parentSelector={() => document.body}
 				>
-				<NewProductPopup onNewProductSubmitted={onNewProductSubmitted} />
-				<button onClick={() => setIsOpen(false)}>Close</button>
+				<NewProductPopup 
+					onNewProductSubmitted={onNewProductSubmitted}
+					onClosed={() => setIsOpen(false)}
+					/>
 			</Modal>
 		</>
 	)
